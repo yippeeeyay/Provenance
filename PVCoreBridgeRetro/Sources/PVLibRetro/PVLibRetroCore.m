@@ -2137,7 +2137,61 @@ static int16_t RETRO_CALLCONV input_state_callback(unsigned port, unsigned devic
     __strong PVLibRetroCoreBridge *strongCurrent = _current;
     int16_t value = 0;
     
-    if (port == 0 & device == RETRO_DEVICE_JOYPAD)
+    if (device == RETRO_DEVICE_MOUSE) {
+        /*
+         #define RETRO_DEVICE_ID_MOUSE_X                0
+         #define RETRO_DEVICE_ID_MOUSE_Y                1
+         #define RETRO_DEVICE_ID_MOUSE_LEFT             2
+         #define RETRO_DEVICE_ID_MOUSE_RIGHT            3
+         #define RETRO_DEVICE_ID_MOUSE_WHEELUP          4
+         #define RETRO_DEVICE_ID_MOUSE_WHEELDOWN        5
+         #define RETRO_DEVICE_ID_MOUSE_MIDDLE           6
+         #define RETRO_DEVICE_ID_MOUSE_HORIZ_WHEELUP    7
+         #define RETRO_DEVICE_ID_MOUSE_HORIZ_WHEELDOWN  8
+         #define RETRO_DEVICE_ID_MOUSE_BUTTON_4         9
+         #define RETRO_DEVICE_ID_MOUSE_BUTTON_5         10
+         */
+        switch (_id) {
+            case RETRO_DEVICE_ID_MOUSE_X:
+                NSLog(@"Polled for mouse X");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_Y:
+                NSLog(@"Polled for mouse Y");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_LEFT:
+                NSLog(@"Polled for mouse Left");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_RIGHT:
+                NSLog(@"Polled for mouse Right");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_WHEELUP:
+                NSLog(@"Polled for mouse WHEEL UP");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_WHEELDOWN:
+                NSLog(@"Polled for mouse WHEEL Down");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_MIDDLE:
+                NSLog(@"Polled for mouse Middle");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_HORIZ_WHEELUP:
+                NSLog(@"Polled for wheel up");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_HORIZ_WHEELDOWN:
+                NSLog(@"Polled for wheel down");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_BUTTON_4:
+                NSLog(@"Polled for button 4");
+                break;
+            case RETRO_DEVICE_ID_MOUSE_BUTTON_5:
+                NSLog(@"Polled for mouse button 5");
+                break;
+
+            default:
+                NSLog(@"Polled for mouse UNHANDLED event %i", _id);
+                break;
+        }
+    }
+    else if (port == 0 & device == RETRO_DEVICE_JOYPAD)
     {
         if (strongCurrent.controller1)
         {
@@ -2780,6 +2834,39 @@ static int16_t RETRO_CALLCONV input_state_callback(unsigned port, unsigned devic
     //    void retro_cheat_set(unsigned index, bool enabled, const char *code) { (void)index; (void)enabled; (void)code; }
 }
 
+@end
+
+@implementation PVLibRetroCoreBridge (Touches)
+- (void)sendEvent:(UIEvent *)event {
+    [super sendEvent:event];
+    
+    if (event.type != UIEventTypeTouches) {
+        return;
+    }
+    
+    if([self conformsToProtocol:@protocol(MouseResponder)] && [self gameSupportsMouse]) {
+        //    UITouch *touch = [[event touchesForView:nil] anyObject];
+        //    if (!touch) {
+        //        self.touchActive = NO;
+        //        return;
+        //    }
+        //
+        //    CGPoint location = [touch locationInView:nil];
+        //    CGRect bounds = [UIScreen mainScreen].bounds;
+        //
+        //    // Convert to relative coordinates for mouse movement
+        //    self.currentTouchPoint = CGPointMake(
+        //        ((location.x / bounds.size.width) * 256),
+        //        ((location.y / bounds.size.height) * 192)
+        //    );
+        //
+        //    self.touchActive = (touch.phase != UITouchPhaseEnded &&
+        //                       touch.phase != UITouchPhaseCancelled);
+        //
+        //    extern bool touchEnabled;
+        //    touchEnabled = self.touchActive;
+    }
+}
 @end
 
 unsigned retro_api_version(void)
