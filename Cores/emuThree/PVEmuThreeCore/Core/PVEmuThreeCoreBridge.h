@@ -32,6 +32,7 @@ typedef enum PV3DSButton: NSInteger PV3DSButton;
     BOOL enableLogging;
     BOOL asyncShader;
     BOOL asyncPresent;
+    BOOL customTextures;
     int8_t shaderType;
     BOOL enableVSync;
     BOOL enableShaderAccurate;
